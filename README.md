@@ -54,8 +54,8 @@ cd fundl
 
 ---
 ## Links
-Website: https://fundl.us
-DoraHacks: https://dorahacks.io/hackathon/ethbucharest2025/detail
-X: https://x.com/wr1159
+- [Website: https://fundl.us](https://fundl.us)
+- [DoraHacks: https://dorahacks.io/hackathon/ethbucharest2025/detail](https://dorahacks.io/hackathon/ethbucharest2025/detail)
+- [X: https://x.com/wr1159](https://x.com/wr1159)
 
 
