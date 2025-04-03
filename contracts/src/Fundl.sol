@@ -107,10 +107,12 @@ contract Fundl {
                 projects[_projectId].goalAmount,
             "Funding goal exceeded"
         );
-        IERC20(projects[_projectId].tokenAddress).transferFrom(
-            msg.sender,
-            projects[_projectId].owner,
-            _amount
+        require(
+            IERC20(projects[_projectId].tokenAddress).transferFrom(
+                msg.sender,
+                address(this),
+                _amount
+            )
         );
         fundingByUsersByProject[_projectId][msg.sender] += _amount;
         fundersByProject[_projectId]++;
@@ -127,13 +129,15 @@ contract Fundl {
         );
         uint256 milestoneAmount = (projects[_projectId].goalAmount /
             projects[_projectId].milestones);
-        uint256 amountToBeCollected = milestoneAmount *
-            ((block.timestamp - projects[_projectId].timeLastCollected) /
-                60 days);
+        uint256 amountToBeCollected = (milestoneAmount *
+            (block.timestamp - projects[_projectId].timeLastCollected)) /
+            60 days;
         IERC20(projects[_projectId].tokenAddress).transfer(
             projects[_projectId].owner,
             amountToBeCollected
         );
+        projects[_projectId].amountCollectedForMilestone += amountToBeCollected;
+        projects[_projectId].timeLastCollected = block.timestamp;
     }
 
     function createRefundRequest(uint256 _projectId) public {
