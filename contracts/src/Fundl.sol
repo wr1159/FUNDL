@@ -115,7 +115,6 @@ contract Fundl {
         fundingByUsersByProject[_projectId][msg.sender] += _amount;
         fundersByProject[_projectId]++;
         projects[_projectId].raisedAmount += _amount;
-        // Funders add
     }
 
     function collectFunding(uint256 _projectId) public {
@@ -154,6 +153,26 @@ contract Fundl {
         );
         refundRequestByUsersByProject[_projectId][msg.sender] = true;
         refundRequestsByProject[_projectId]++;
+    }
+
+    function refund(uint256 _projectId) public {
+        require(
+            projects[_projectId].isInProgress,
+            "Project is not in progress"
+        );
+        require(
+            fundingByUsersByProject[_projectId][msg.sender] > 0,
+            "You have not funded this project"
+        );
+        require(
+            fundersByProject[_projectId] > 2,
+            "Not enough funders for this project"
+        );
+        require(
+            refundRequestsByProject[_projectId] >=
+                fundersByProject[_projectId] / 2,
+            "Refund request not created"
+        );
         if (
             refundRequestsByProject[_projectId] >=
             fundersByProject[_projectId] / 2
