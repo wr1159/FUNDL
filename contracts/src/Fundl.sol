@@ -173,20 +173,15 @@ contract Fundl {
                 fundersByProject[_projectId] / 2,
             "Refund request not created"
         );
-        if (
-            refundRequestsByProject[_projectId] >=
-            fundersByProject[_projectId] / 2
-        ) {
-            // Refund users
-            uint256 amountToBeRefunded = fundingByUsersByProject[_projectId][
-                msg.sender
-            ];
-            IERC20(projects[_projectId].tokenAddress).transfer(
-                msg.sender,
-                amountToBeRefunded
-            );
-            projects[_projectId].raisedAmount -= amountToBeRefunded;
-            fundingByUsersByProject[_projectId][msg.sender] = 0;
-        }
+        // Refund users
+        uint256 amountToBeRefunded = fundingByUsersByProject[_projectId][
+            msg.sender
+        ];
+        IERC20(projects[_projectId].tokenAddress).transfer(
+            msg.sender,
+            amountToBeRefunded
+        );
+        projects[_projectId].raisedAmount -= amountToBeRefunded;
+        fundingByUsersByProject[_projectId][msg.sender] = 0;
     }
 }
