@@ -1,3 +1,5 @@
+
+
 export const FundlAddress = "0xE88992f10a655Da303D4683da8E931ab06A3a936";
 export const FundlABI = [
     {
@@ -35,7 +37,9 @@ export const FundlABI = [
                 type: "address",
                 internalType: "address",
             },
-            { name: "_name", type: "string", internalType: "string" },
+            { name: "_name", 
+              type: "string", 
+              internalType: "string" },
             {
                 name: "_description",
                 type: "string",
