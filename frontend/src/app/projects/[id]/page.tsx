@@ -41,7 +41,7 @@ type Project = [
     currentMilestoneStartTime: bigint,
     timeLastCollected: bigint,
     amountCollectedForMilestone: bigint
-] & { [key: number]: any };
+];
 
 export default function ProjectPage() {
     const { id } = useParams();
@@ -57,7 +57,6 @@ export default function ProjectPage() {
     const {
         data: projectData,
         isError,
-        error: readError,
         isLoading,
     } = useReadContract({
         address: FundlAddress as `0x${string}`,
@@ -436,7 +435,7 @@ export default function ProjectPage() {
                                 </h2>
                                 <p className="mb-4">
                                     Connect your wallet to fund this project or
-                                    collect funds if you're the owner.
+                                    collect funds if you`&#39;`re the owner.
                                 </p>
                                 <Button>
                                     <Wallet>
