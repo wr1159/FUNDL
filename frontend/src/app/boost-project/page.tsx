@@ -185,7 +185,7 @@ const BoostProjectPage = () => {
                     </h1>
 
                     {/* Wallet Connection Section */}
-                    <div className="p-4 mb-8 border-4 border-black rounded-lg bg-purple-100">
+                    <div className="p-4 mb-8 border-4 border-black rounded-lg bg-bg">
                         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
                             <div>
                                 <h2 className="font-bold">Wallet</h2>
@@ -206,9 +206,7 @@ const BoostProjectPage = () => {
                                         : connectWallet
                                 }
                                 size="lg"
-                                className={
-                                    isConnected ? "bg-red-500" : "bg-blue-500"
-                                }
+                                className={isConnected ? "bg-red-500" : ""}
                             >
                                 {isConnected ? "Disconnect" : "Connect Wallet"}
                             </Button>
