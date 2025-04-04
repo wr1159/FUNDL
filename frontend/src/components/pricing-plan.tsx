@@ -30,7 +30,6 @@ export default function PricingPlan({
                 <p className="mb-3 mt-1">{description}</p>
                 <div>
                     <span className="text-3xl font-heading">${price}</span>{" "}
-                    
                 </div>
                 <ul className="mt-8 flex flex-col gap-2">
                     {perks.map((perk) => {
@@ -50,8 +49,8 @@ export default function PricingPlan({
                 )}
                 disabled={mostPopular}
             >
-                <Link href={"/boost-project"}>
-                Buy Plan
+                <Link href={"/boost-project"} className="w-full">
+                    Buy Plan
                 </Link>
             </Button>
         </div>
