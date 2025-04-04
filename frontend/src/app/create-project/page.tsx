@@ -1,7 +1,6 @@
 "use client";
 
 import { Avatar, Name } from "@coinbase/onchainkit/identity";
-import { motion } from "framer-motion";
 import {
     Transaction,
     TransactionButton,
@@ -13,7 +12,7 @@ import {
 import { Wallet, ConnectWallet } from "@coinbase/onchainkit/wallet";
 import { useAccount } from "wagmi";
 import { baseSepolia } from "viem/chains";
-import { encodeFunctionData, parseEther } from "viem"
+import { encodeFunctionData, parseEther } from "viem";
 import { useState } from "react";
 import { FundlABI, FundlAddress } from "@/lib/calls";
 
@@ -26,60 +25,45 @@ export default function CreateProject() {
     const [projectMilestones, setProjectMilestones] = useState("");
     const [goalTarget, setGoalTarget] = useState("");
 
-    const createProject = address ? [
-        {
-            to: FundlAddress as `0x${string}`,
-            data: encodeFunctionData({
-                abi: FundlABI,
-                functionName: "createProject",
-                args: [
-                    address as `0x${string}`, 
-                    projectName || "",
-                    projectDescription || "",
-                    projectImage || "",
-                    projectMilestones || "",
-                    parseEther(goalTarget || "0")
-                ],
-            }),
-            value: "0", // Explicitly set the value to 0
-            chainId: baseSepolia.id,
-        },
-    ] : [];
-
+    const createProject = address
+        ? [
+              {
+                  to: FundlAddress as `0x${string}`,
+                  data: encodeFunctionData({
+                      abi: FundlABI,
+                      functionName: "createProject",
+                      args: [
+                          address as `0x${string}`,
+                          projectName || "",
+                          projectDescription || "",
+                          projectImage || "",
+                          projectMilestones || "",
+                          parseEther(goalTarget || "0"),
+                      ],
+                  }),
+                  chainId: baseSepolia.id,
+              },
+          ]
+        : [];
 
     return (
         <div className="relative min-h-screen">
-            <motion.main
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="relative z-10"
-            >
+            <main className="relative z-10">
                 {/* Hero Section */}
                 <section className="relative h-[60vh] w-full">
                     <div className="relative h-full flex items-center justify-center text-center">
-                        <motion.div
-                            initial={{ y: 0, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.8 }}
-                            className="max-w-4xl px-4"
-                        >
+                        <div className="max-w-4xl px-4">
                             <h1 className="text-4xl md:text-7xl font-bold text-primary mb-6">
                                 Create a Project
                             </h1>
-                            
-                        </motion.div>
+                        </div>
                     </div>
                 </section>
 
                 {/* Form Section */}
                 <section>
                     <div className="container mx-auto px-4 max-w-xl">
-                        <motion.form
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.8 }}
-                            className="space-y-6"
-                        >   
+                        <form className="space-y-6">
                             <div className="form-group">
                                 <label
                                     htmlFor="Address"
@@ -170,7 +154,9 @@ export default function CreateProject() {
                                     className="w-full px-4 py-2 border border-border rounded-lg"
                                     placeholder="Enter project milestones"
                                     value={projectMilestones}
-                                    onChange={(e) => setProjectMilestones(e.target.value)}
+                                    onChange={(e) =>
+                                        setProjectMilestones(e.target.value)
+                                    }
                                     required
                                 />
                             </div>
@@ -186,12 +172,12 @@ export default function CreateProject() {
                                     className="w-full px-4 py-2 border border-border rounded-lg"
                                     placeholder="Enter goal target"
                                     value={goalTarget}
-                                    onChange={(e) => setGoalTarget(e.target.value)}
+                                    onChange={(e) =>
+                                        setGoalTarget(e.target.value)
+                                    }
                                     required
                                 />
                             </div>
-
-                         
 
                             {/* OnchainKit Transaction Component */}
                             {address ? (
@@ -204,7 +190,7 @@ export default function CreateProject() {
                                     // }}
                                     isSponsored={true}
                                     chainId={baseSepolia.id}
-                                    calls={createProject as any}
+                                    calls={createProject}
                                 >
                                     <TransactionButton
                                         className="w-full bg-primary text-primary-foreground py-3 px-8 rounded-lg"
@@ -224,10 +210,10 @@ export default function CreateProject() {
                                     </ConnectWallet>
                                 </Wallet>
                             )}
-                        </motion.form>
+                        </form>
                     </div>
                 </section>
-            </motion.main>
+            </main>
         </div>
     );
 }
