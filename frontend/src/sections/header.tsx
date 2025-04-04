@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Header() {
     return (
@@ -19,12 +20,23 @@ export default function Header() {
                     </a>{" "}
                     for more info.
                 </p>
-                <Button
-                    size="lg"
-                    className="h-12 text-base font-heading md:text-lg lg:h-14 lg:text-xl"
-                >
-                    Get started
-                </Button>
+                <div className="flex flex-wrap items-center justify-center gap-4">
+                    <Button
+                        size="lg"
+                        className="h-12 text-base font-heading md:text-lg lg:h-14 lg:text-xl"
+                    >
+                        Get started
+                    </Button>
+
+                    <Link href="/boost-project">
+                        <Button
+                            size="lg"
+                            className="h-12 text-base font-heading md:text-lg lg:h-14 lg:text-xl"
+                        >
+                            Boost Projects 🚀
+                        </Button>
+                    </Link>
+                </div>
             </div>
         </header>
     );
