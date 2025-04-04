@@ -31,7 +31,7 @@ export default function Header() {
                     <Link href="/boost-project">
                         <Button
                             size="lg"
-                            className="h-12 text-base font-heading md:text-lg lg:h-14 lg:text-xl"
+                            className="h-12 text-base font-heading md:text-lg lg:h-14 lg:text-xl bg-green-500 hover:bg-green-600"
                         >
                             Boost Projects 🚀
                         </Button>
