@@ -1,6 +1,7 @@
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default function PricingPlan({
     perks,
@@ -22,14 +23,14 @@ export default function PricingPlan({
                     <h3 className="text-2xl font-heading">{planName}</h3>
                     {mostPopular && (
                         <span className="border-border text-text dark:border-darkBorder rounded-base border-2 bg-main px-2 py-0.5 text-sm">
-                            Most popular
+                            Coming Soon
                         </span>
                     )}
                 </div>
                 <p className="mb-3 mt-1">{description}</p>
                 <div>
                     <span className="text-3xl font-heading">${price}</span>{" "}
-                    <span>/month</span>{" "}
+                    
                 </div>
                 <ul className="mt-8 flex flex-col gap-2">
                     {perks.map((perk) => {
@@ -47,8 +48,11 @@ export default function PricingPlan({
                     "mt-12 w-full",
                     mostPopular && "bg-black text-white"
                 )}
+                disabled={mostPopular}
             >
+                <Link href={"/boost-project"}>
                 Buy Plan
+                </Link>
             </Button>
         </div>
     );

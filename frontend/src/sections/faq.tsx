@@ -22,46 +22,44 @@ export default function Faq() {
                     >
                         <AccordionItem className="mb-2" value="item-1">
                             <AccordionTrigger>
-                                Lorem ipsum dolor sit amet
+                                🛠️ How do I create a project?
                             </AccordionTrigger>
                             <AccordionContent>
-                                Lorem ipsum dolor, sit amet consectetur
-                                adipisicing elit. Accusantium suscipit sed nihil
-                                fuga sapiente facere dolore corrupti labore
-                                illum reiciendis?
+                            To launch a project, click "Create Project" and provide the following:
+                            {<ul className="list-disc list-inside">
+                            <li>Your funding goal</li>
+                            <li>The ERC20 token you want to receive</li>
+                            <li>The end date of your campaign</li>
+                            <li>A clear description and purpose for your project</li>
+                            <li>Once submitted, your project will be published and open for funding.</li>
+                            </ul>}
+                            
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem className="mb-2" value="item-2">
                             <AccordionTrigger>
-                                Lorem ipsum dolor sit amet
+                                💸 How does funding work?
                             </AccordionTrigger>
                             <AccordionContent>
-                                Lorem ipsum dolor, sit amet consectetur
-                                adipisicing elit. Accusantium suscipit sed nihil
-                                fuga sapiente facere dolore corrupti labore
-                                illum reiciendis?
+                            Supporters can fund your project using the ERC20 token you specified. Funds aren’t released all at once—they’re streamed gradually to ensure accountability and alignment with milestones.
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem className="mb-2" value="item-3">
                             <AccordionTrigger>
-                                Lorem ipsum dolor sit amet
+                                🚀 What is Boosting?
                             </AccordionTrigger>
                             <AccordionContent>
-                                Lorem ipsum dolor, sit amet consectetur
-                                adipisicing elit. Accusantium suscipit sed nihil
-                                fuga sapiente facere dolore corrupti labore
-                                illum reiciendis?
+                            Boosting is a paid feature that increases your project's visibility on the platform. Projects with Boost appear in featured sections, get highlighted badges, and attract more attention from the community.
+
+
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="item-4">
                             <AccordionTrigger>
-                                Lorem ipsum dolor sit amet
+                            🗳️ How do refunds work?
                             </AccordionTrigger>
                             <AccordionContent>
-                                Lorem ipsum dolor, sit amet consectetur
-                                adipisicing elit. Accusantium suscipit sed nihil
-                                fuga sapiente facere dolore corrupti labore
-                                illum reiciendis?
+                            If backers feel a project is inactive or off-track, they can initiate a community vote to halt the payment stream. If the vote passes, the stream is stopped, and remaining funds are refunded to the supporters proportionally.
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>
@@ -78,7 +76,7 @@ export default function Faq() {
                             return (
                                 <div className="flex items-center" key={id}>
                                     <span className="mx-8 text-xl font-heading sm:text-2xl lg:text-4xl">
-                                        Neobrutalism components
+                                        FUNDL NOW
                                     </span>
                                 </div>
                             );
