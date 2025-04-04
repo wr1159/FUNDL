@@ -126,6 +126,7 @@ const BoostProjectPage = () => {
     const [transactionDetails, setTransactionDetails] = useState<{
         transactionHash?: string;
     }>({});
+    const [error, setError] = useState<string | null>(null);
 
     const {
         account,
@@ -145,6 +146,7 @@ const BoostProjectPage = () => {
     // Handle project selection
     const handleProjectSelect = (projectId: string) => {
         setSelectedProject(projectId);
+        setError(null);
     };
 
     // Create payment request
@@ -152,13 +154,14 @@ const BoostProjectPage = () => {
         if (!isConnected || !provider || !account || !selectedProject) return;
 
         try {
+            setError(null);
             setPaymentStatus(PaymentStatus.CREATING);
 
             // Find selected project
             const project = mockProjects.find((p) => p.id === selectedProject);
             if (!project) return;
 
-            // Create payment request
+            // Create payment request using Request Network API
             const request = await createNativePaymentRequest(
                 ethAmount,
                 account,
@@ -171,6 +174,11 @@ const BoostProjectPage = () => {
         } catch (error) {
             console.error("Payment request error:", error);
             setPaymentStatus(PaymentStatus.ERROR);
+            setError(
+                error instanceof Error
+                    ? error.message
+                    : "Failed to create payment request"
+            );
         }
     };
 
@@ -179,14 +187,13 @@ const BoostProjectPage = () => {
         if (!isConnected || !provider || !account || !paymentRequest) return;
 
         try {
+            setError(null);
             setPaymentStatus(PaymentStatus.PROCESSING);
 
-            // Send ETH payment
+            // Send ETH payment using the payment reference from Request Network
             const { transactionHash } = await sendEthPayment(
                 provider,
-                paymentRequest.receiver,
-                paymentRequest.expectedAmount,
-                paymentRequest.details.reason
+                paymentRequest.paymentReference
             );
 
             setTransactionDetails({
@@ -206,6 +213,11 @@ const BoostProjectPage = () => {
         } catch (error) {
             console.error("Payment error:", error);
             setPaymentStatus(PaymentStatus.ERROR);
+            setError(
+                error instanceof Error
+                    ? error.message
+                    : "Failed to process payment"
+            );
         }
     };
 
@@ -228,7 +240,7 @@ const BoostProjectPage = () => {
     };
 
     return (
-        <main className="min-h-screen p-6 bg-yellow-50">
+        <main className="min-h-screen p-6 bg-bg">
             <Card className="max-w-4xl mx-auto my-8">
                 <div className="flex flex-col">
                     <h1 className="mb-8 text-4xl font-extrabold text-center">
@@ -271,7 +283,7 @@ const BoostProjectPage = () => {
                         <h2 className="mb-4 text-xl font-bold">
                             Select Project to Boost
                         </h2>
-                        <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-8 md:grid-cols-2">
                             {mockProjects.map((project) => (
                                 <div
                                     key={project.id}
@@ -280,7 +292,7 @@ const BoostProjectPage = () => {
                                     }
                                     className={`cursor-pointer transition-transform ${
                                         selectedProject === project.id
-                                            ? "scale-105 border-4 border-blue-500 rounded-lg"
+                                            ? "scale-110 rounded-lg"
                                             : ""
                                     }`}
                                 >
@@ -362,6 +374,13 @@ const BoostProjectPage = () => {
                             )}
                         </div>
 
+                        {/* Error message */}
+                        {error && (
+                            <div className="p-3 mb-4 border-2 border-red-500 rounded-md bg-red-100">
+                                <p className="text-sm text-red-700">{error}</p>
+                            </div>
+                        )}
+
                         {/* Payment Status */}
                         {paymentStatus && (
                             <div className="p-4 mt-4 border-2 border-black rounded-lg bg-yellow-50">
@@ -379,6 +398,12 @@ const BoostProjectPage = () => {
                                         <TransactionInfo
                                             label="Request ID"
                                             value={paymentRequest.requestId}
+                                        />
+                                        <TransactionInfo
+                                            label="Payment Reference"
+                                            value={
+                                                paymentRequest.paymentReference
+                                            }
                                         />
                                         <TransactionInfo
                                             label="Receiver"
@@ -423,7 +448,7 @@ const BoostProjectPage = () => {
                             support. The ${boostPriceUsd} fee (paid in ETH) is
                             used to promote the project to potential investors
                             and supporters. Payments are processed on the
-                            Sepolia testnet.
+                            Sepolia testnet via Request Network.
                         </p>
                     </div>
                 </div>

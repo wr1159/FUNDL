@@ -4,8 +4,7 @@ import React, { ReactNode, useEffect, useState } from "react";
 import { providers, ethers } from "ethers";
 
 // Request Network Configuration
-export const MOCK_RECEIVER_ADDRESS =
-    "0x1234567890123456789012345678901234567890";
+export const RECEIVER_ADDRESS = "0x1e527408BFC6Fcaf91a7Fb0c80D11F57E8f171Cb";
 export const REQUEST_API_URL = "https://api.request.network/currency";
 
 // Create Request Network Provider

@@ -1,5 +1,8 @@
 import { ethers } from "ethers";
-import { MOCK_RECEIVER_ADDRESS } from "@/components/request-network-provider";
+import { RECEIVER_ADDRESS } from "@/components/request-network-provider";
+
+// API key for Request Network
+const REQUEST_API_KEY = "rn_v1_unkhhb3ayrxr6xc6xm2bo6wjmgrefxcq";
 
 // Interface for project data
 export interface Project {
@@ -49,13 +52,30 @@ export enum PaymentStatus {
 // Interface for payment request
 export interface PaymentRequest {
     requestId: string;
-    paymentLink: string;
+    paymentReference: string;
     expectedAmount: string;
     receiver: string;
     network: string;
     details: {
         reason: string;
         dueDate?: string;
+    };
+}
+
+// Interface for payment transaction data
+export interface PaymentTransactionData {
+    transactions: {
+        data: string;
+        to: string;
+        value: {
+            type: string;
+            hex: string;
+        };
+    }[];
+    metadata: {
+        stepsRequired: number;
+        needsApproval: boolean;
+        approvalTransactionIndex: number | null;
     };
 }
 
@@ -67,21 +87,36 @@ export const createNativePaymentRequest = async (
     projectName: string
 ): Promise<PaymentRequest> => {
     try {
-        // Current timestamp in seconds
-        const timestamp = Math.floor(Date.now() / 1000);
+        // Call the Request Network API to create a payment request
+        const response = await fetch("https://api.request.network/v1/request", {
+            method: "POST",
+            headers: {
+                "x-api-key": REQUEST_API_KEY,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                payer: senderAddress,
+                payee: RECEIVER_ADDRESS,
+                amount: "10",
+                invoiceCurrency: "USD",
+                paymentCurrency: "ETH-sepolia-sepolia",
+                reason: `Boost payment for ${projectName} (ID: ${projectId})`,
+            }),
+        });
 
-        // Create a unique request ID based on timestamp, sender, and project
-        const requestId = ethers.utils
-            .id(`${timestamp}-${senderAddress}-${projectId}`)
-            .substring(0, 42);
+        if (!response.ok) {
+            const errorData = await response.text();
+            throw new Error(`API Error: ${response.status} - ${errorData}`);
+        }
 
-        // In a real implementation, you'd call the Request Network API here
-        // For the mock implementation, we'll create a simulated request
+        const data = await response.json();
+
+        // Create a payment request from API response
         const paymentRequest: PaymentRequest = {
-            requestId,
-            paymentLink: `https://sepolia.etherscan.io/address/${MOCK_RECEIVER_ADDRESS}`,
+            requestId: data.requestId,
+            paymentReference: data.paymentReference,
             expectedAmount: ethAmount,
-            receiver: MOCK_RECEIVER_ADDRESS,
+            receiver: RECEIVER_ADDRESS,
             network: "sepolia",
             details: {
                 reason: `Boost payment for ${projectName} (ID: ${projectId})`,
@@ -91,9 +126,6 @@ export const createNativePaymentRequest = async (
             },
         };
 
-        // Simulate API latency
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
         return paymentRequest;
     } catch (error) {
         console.error("Error creating payment request:", error);
@@ -101,22 +133,54 @@ export const createNativePaymentRequest = async (
     }
 };
 
+// Function to get payment data from Request Network
+export const getPaymentData = async (
+    paymentReference: string
+): Promise<PaymentTransactionData> => {
+    try {
+        const response = await fetch(
+            `https://api.request.network/v1/request/${paymentReference}/pay`,
+            {
+                method: "GET",
+                headers: {
+                    "x-api-key": REQUEST_API_KEY,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        if (!response.ok) {
+            const errorData = await response.text();
+            throw new Error(`API Error: ${response.status} - ${errorData}`);
+        }
+
+        const data = await response.json();
+        return data as PaymentTransactionData;
+    } catch (error) {
+        console.error("Error getting payment data:", error);
+        throw error;
+    }
+};
+
 // Function to send ETH payment
 export const sendEthPayment = async (
     provider: ethers.providers.Web3Provider,
-    receiverAddress: string,
-    amount: string,
-    reason: string
+    paymentReference: string
 ): Promise<{ transactionHash: string; status: string }> => {
     try {
         const signer = provider.getSigner();
 
-        // Create transaction
+        // Get payment data from Request Network API
+        const paymentData = await getPaymentData(paymentReference);
+
+        // For native currency payments, we use the first transaction
+        const txData = paymentData.transactions[0];
+
+        // Create transaction using the data from the API
         const tx = await signer.sendTransaction({
-            to: receiverAddress,
-            value: ethers.utils.parseEther(amount),
-            // Include payment reason in data field
-            data: ethers.utils.toUtf8Bytes(reason),
+            to: txData.to,
+            value: txData.value.hex,
+            data: txData.data,
         });
 
         // Wait for transaction confirmation
