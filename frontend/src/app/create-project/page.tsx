@@ -14,14 +14,15 @@ import { useAccount } from "wagmi";
 import { baseSepolia } from "viem/chains";
 import { encodeFunctionData, parseEther } from "viem";
 import { useState } from "react";
-import { FundlABI, FundlAddress } from "@/lib/calls";
+import { FundlABI, FundlAddress, MockTokenAddress } from "@/lib/calls";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export default function CreateProject() {
     const { address } = useAccount();
-    const [tokenAddress, setTokenAddress] = useState("");
+    const [tokenAddress, setTokenAddress] = useState(MockTokenAddress);
     const [projectName, setProjectName] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
     const [projectImage, setProjectImage] = useState("");
@@ -65,25 +66,6 @@ export default function CreateProject() {
                         <form className="space-y-6">
                             <div className="form-group">
                                 <Label
-                                    htmlFor="Address"
-                                    className="block text-xl font-bold text-foreground mb-2"
-                                >
-                                    Token Address
-                                </Label>
-                                <Input
-                                    type="text"
-                                    id="Address"
-                                    className="w-full px-4 py-2 border border-border rounded-lg"
-                                    placeholder="Enter token address"
-                                    value={tokenAddress}
-                                    onChange={(e) =>
-                                        setTokenAddress(e.target.value)
-                                    }
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <Label
                                     htmlFor="projectName"
                                     className="block text-xl font-bold text-foreground mb-2"
                                 >
@@ -107,7 +89,7 @@ export default function CreateProject() {
                                     htmlFor="projectDescription"
                                     className="block text-xl font-bold text-foreground mb-2"
                                 >
-                                    Project Description
+                                    Project Description (Be Detailed!)
                                 </Label>
                                 <textarea
                                     id="projectDescription"
@@ -146,7 +128,7 @@ export default function CreateProject() {
                                     htmlFor="Milestones"
                                     className="block text-xl font-bold text-foreground mb-2"
                                 >
-                                    Project Milestones
+                                    Number of Milestones
                                 </Label>
                                 <Input
                                     id="projectMilestones"
@@ -164,7 +146,7 @@ export default function CreateProject() {
                                     htmlFor="goal"
                                     className="block text-xl font-bold text-foreground mb-2"
                                 >
-                                    Goal Target
+                                    Goal Amount
                                 </Label>
                                 <Input
                                     id="goalTarget"
@@ -173,6 +155,25 @@ export default function CreateProject() {
                                     value={goalTarget}
                                     onChange={(e) =>
                                         setGoalTarget(e.target.value)
+                                    }
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <Label
+                                    htmlFor="Address"
+                                    className="block text-xl font-bold text-foreground mb-2"
+                                >
+                                    Token Address (Optional)
+                                </Label>
+                                <Input
+                                    type="text"
+                                    id="Address"
+                                    className="w-full px-4 py-2 border border-border rounded-lg"
+                                    placeholder="Enter token address"
+                                    value={tokenAddress}
+                                    onChange={(e) =>
+                                        setTokenAddress(e.target.value)
                                     }
                                     required
                                 />
@@ -191,10 +192,12 @@ export default function CreateProject() {
                                     chainId={baseSepolia.id}
                                     calls={createProject}
                                 >
-                                    <TransactionButton
-                                        className="w-full bg-primary text-primary-foreground py-3 px-8 rounded-lg"
-                                        text="Create Bounty"
-                                    />
+                                    <Button>
+                                        <TransactionButton
+                                            className="w-full bg-inherit hover:bg-inherit p-0"
+                                            text="Create Bounty"
+                                        />
+                                    </Button>
                                     <TransactionSponsor />
                                     <TransactionStatus>
                                         <TransactionStatusLabel />
@@ -202,12 +205,14 @@ export default function CreateProject() {
                                     </TransactionStatus>
                                 </Transaction>
                             ) : (
-                                <Wallet>
-                                    <ConnectWallet>
-                                        <Avatar className="h-6 w-6" />
-                                        <Name />
-                                    </ConnectWallet>
-                                </Wallet>
+                                <Button>
+                                    <Wallet>
+                                        <ConnectWallet className="bg-inherit hover:bg-inherit">
+                                            <Avatar className="h-6 w-6" />
+                                            <Name />
+                                        </ConnectWallet>
+                                    </Wallet>
+                                </Button>
                             )}
                         </form>
                     </div>
