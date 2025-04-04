@@ -13,74 +13,11 @@ import {
 } from "@/lib/request-network";
 import { RequestNetworkProvider } from "@/components/request-network-provider";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Select } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 
 // Neobrutalism styled components
-const Card = ({
-    children,
-    className = "",
-}: {
-    children: React.ReactNode;
-    className?: string;
-}) => (
-    <div
-        className={`bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-lg p-6 ${className}`}
-    >
-        {children}
-    </div>
-);
-
-const Badge = ({
-    children,
-    color = "blue",
-}: {
-    children: React.ReactNode;
-    color?: string;
-}) => {
-    const colorClasses = {
-        blue: "bg-blue-200 border-blue-500",
-        green: "bg-green-200 border-green-500",
-        red: "bg-red-200 border-red-500",
-        yellow: "bg-yellow-200 border-yellow-500",
-        purple: "bg-purple-200 border-purple-500",
-    };
-
-    return (
-        <span
-            className={`inline-block px-3 py-1 text-sm font-bold border-2 rounded-md ${
-                colorClasses[color as keyof typeof colorClasses]
-            }`}
-        >
-            {children}
-        </span>
-    );
-};
-
-const Select = ({
-    options,
-    value,
-    onChange,
-    placeholder,
-}: {
-    options: { value: string; label: string }[];
-    value: string;
-    onChange: (value: string) => void;
-    placeholder: string;
-}) => (
-    <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full p-3 font-bold bg-white border-4 border-black rounded-lg shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] focus:outline-none focus:ring-4 focus:ring-yellow-400"
-    >
-        <option value="" disabled>
-            {placeholder}
-        </option>
-        {options.map((option) => (
-            <option key={option.value} value={option.value}>
-                {option.label}
-            </option>
-        ))}
-    </select>
-);
 
 const TransactionInfo = ({
     label,

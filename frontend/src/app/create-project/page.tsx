@@ -15,6 +15,9 @@ import { baseSepolia } from "viem/chains";
 import { encodeFunctionData, parseEther } from "viem";
 import { useState } from "react";
 import { FundlABI, FundlAddress } from "@/lib/calls";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
 
 export default function CreateProject() {
     const { address } = useAccount();
@@ -47,31 +50,27 @@ export default function CreateProject() {
         : [];
 
     return (
-        <div className="relative min-h-screen">
-            <main className="relative z-10">
-                {/* Hero Section */}
-                <section className="relative h-[60vh] w-full">
-                    <div className="relative h-full flex items-center justify-center text-center">
-                        <div className="max-w-4xl px-4">
-                            <h1 className="text-4xl md:text-7xl font-bold text-primary mb-6">
-                                Create a Project
-                            </h1>
-                        </div>
+        <div className="relative min-h-screen bg-bg p-6">
+            {/* Hero Section */}
+            <Card className="max-w-4xl w-full mx-auto my-8">
+                <div className="relative h-full flex items-center justify-center text-center">
+                    <div className="max-w-4xl px-4">
+                        <h1 className="mb-8 text-4xl font-extrabold text-center">
+                            Create a Project 🚀
+                        </h1>
                     </div>
-                </section>
-
-                {/* Form Section */}
+                </div>
                 <section>
-                    <div className="container mx-auto px-4 max-w-xl">
+                    <div className="container mx-auto px-4 max-w-xl bg-blue-50 border-4 border-black rounded-lg p-4">
                         <form className="space-y-6">
                             <div className="form-group">
-                                <label
+                                <Label
                                     htmlFor="Address"
                                     className="block text-xl font-bold text-foreground mb-2"
                                 >
                                     Token Address
-                                </label>
-                                <input
+                                </Label>
+                                <Input
                                     type="text"
                                     id="Address"
                                     className="w-full px-4 py-2 border border-border rounded-lg"
@@ -84,13 +83,13 @@ export default function CreateProject() {
                                 />
                             </div>
                             <div className="form-group">
-                                <label
+                                <Label
                                     htmlFor="projectName"
                                     className="block text-xl font-bold text-foreground mb-2"
                                 >
                                     Project Name
-                                </label>
-                                <input
+                                </Label>
+                                <Input
                                     type="text"
                                     id="projectName"
                                     className="w-full px-4 py-2 border border-border rounded-lg"
@@ -104,12 +103,12 @@ export default function CreateProject() {
                             </div>
 
                             <div className="form-group">
-                                <label
+                                <Label
                                     htmlFor="projectDescription"
                                     className="block text-xl font-bold text-foreground mb-2"
                                 >
                                     Project Description
-                                </label>
+                                </Label>
                                 <textarea
                                     id="projectDescription"
                                     className="w-full px-4 py-2 border border-border rounded-lg"
@@ -124,13 +123,13 @@ export default function CreateProject() {
                             </div>
 
                             <div className="form-group">
-                                <label
+                                <Label
                                     htmlFor="imageLink"
                                     className="block text-xl font-bold text-foreground mb-2"
                                 >
                                     Project Image Link
-                                </label>
-                                <input
+                                </Label>
+                                <Input
                                     type="url"
                                     id="imageLink"
                                     className="w-full px-4 py-2 border border-border rounded-lg"
@@ -143,13 +142,13 @@ export default function CreateProject() {
                                 />
                             </div>
                             <div className="form-group">
-                                <label
+                                <Label
                                     htmlFor="Milestones"
                                     className="block text-xl font-bold text-foreground mb-2"
                                 >
                                     Project Milestones
-                                </label>
-                                <input
+                                </Label>
+                                <Input
                                     id="projectMilestones"
                                     className="w-full px-4 py-2 border border-border rounded-lg"
                                     placeholder="Enter project milestones"
@@ -161,13 +160,13 @@ export default function CreateProject() {
                                 />
                             </div>
                             <div className="form-group">
-                                <label
+                                <Label
                                     htmlFor="goal"
                                     className="block text-xl font-bold text-foreground mb-2"
                                 >
                                     Goal Target
-                                </label>
-                                <input
+                                </Label>
+                                <Input
                                     id="goalTarget"
                                     className="w-full px-4 py-2 border border-border rounded-lg"
                                     placeholder="Enter goal target"
@@ -213,7 +212,9 @@ export default function CreateProject() {
                         </form>
                     </div>
                 </section>
-            </main>
+            </Card>
+
+            {/* Form Section */}
         </div>
     );
 }
