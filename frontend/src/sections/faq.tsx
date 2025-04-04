@@ -25,15 +25,25 @@ export default function Faq() {
                                 🛠️ How do I create a project?
                             </AccordionTrigger>
                             <AccordionContent>
-                            To launch a project, click "Create Project" and provide the following:
-                            {<ul className="list-disc list-inside">
-                            <li>Your funding goal</li>
-                            <li>The ERC20 token you want to receive</li>
-                            <li>The end date of your campaign</li>
-                            <li>A clear description and purpose for your project</li>
-                            <li>Once submitted, your project will be published and open for funding.</li>
-                            </ul>}
-                            
+                                To launch a project, click &quot;Create
+                                Project&quot; and provide the following:
+                                {
+                                    <ul className="list-disc list-inside">
+                                        <li>Your funding goal</li>
+                                        <li>
+                                            The ERC20 token you want to receive
+                                        </li>
+                                        <li>The end date of your campaign</li>
+                                        <li>
+                                            A clear description and purpose for
+                                            your project
+                                        </li>
+                                        <li>
+                                            Once submitted, your project will be
+                                            published and open for funding.
+                                        </li>
+                                    </ul>
+                                }
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem className="mb-2" value="item-2">
@@ -41,7 +51,11 @@ export default function Faq() {
                                 💸 How does funding work?
                             </AccordionTrigger>
                             <AccordionContent>
-                            Supporters can fund your project using the ERC20 token you specified. Funds aren’t released all at once—they’re streamed gradually to ensure accountability and alignment with milestones.
+                                Supporters can fund your project using the ERC20
+                                token you specified. Funds aren&apos;t released
+                                all at once—they&apos;re streamed gradually to
+                                ensure accountability and alignment with
+                                milestones.
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem className="mb-2" value="item-3">
@@ -49,17 +63,23 @@ export default function Faq() {
                                 🚀 What is Boosting?
                             </AccordionTrigger>
                             <AccordionContent>
-                            Boosting is a paid feature that increases your project's visibility on the platform. Projects with Boost appear in featured sections, get highlighted badges, and attract more attention from the community.
-
-
+                                Boosting is a paid feature that increases your
+                                project&apos;s visibility on the platform.
+                                Projects with Boost appear in featured sections,
+                                get highlighted badges, and attract more
+                                attention from the community.
                             </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="item-4">
                             <AccordionTrigger>
-                            🗳️ How do refunds work?
+                                🗳️ How do refunds work?
                             </AccordionTrigger>
                             <AccordionContent>
-                            If backers feel a project is inactive or off-track, they can initiate a community vote to halt the payment stream. If the vote passes, the stream is stopped, and remaining funds are refunded to the supporters proportionally.
+                                If backers feel a project is inactive or
+                                off-track, they can initiate a community vote to
+                                halt the payment stream. If the vote passes, the
+                                stream is stopped, and remaining funds are
+                                refunded to the supporters proportionally.
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>
