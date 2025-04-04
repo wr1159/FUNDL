@@ -9,17 +9,17 @@ export default function Header() {
                     🌱fundl.us
                 </h1>
                 <p className="my-12 mt-8 text-lg font-normal leading-relaxed md:text-xl lg:text-2xl lg:leading-relaxed">
-                    Crowdfundl the best <span className="font-bold">web3</span> projects with us.
-                    
+                    CrowdFUNDL the best <span className="font-bold">Web3</span>{" "}
+                    projects with us.
                 </p>
                 <div className="flex flex-wrap items-center justify-center gap-4">
-                    <Link href="/view-projects">
-                    <Button
-                        size="lg"
-                        className="h-12 text-base font-heading md:text-lg lg:h-14 lg:text-xl"
-                    >
-                        View Projects
-                    </Button>
+                    <Link href="/projects">
+                        <Button
+                            size="lg"
+                            className="h-12 text-base font-heading md:text-lg lg:h-14 lg:text-xl"
+                        >
+                            View Projects
+                        </Button>
                     </Link>
 
                     <Link href="/create-project">
@@ -27,7 +27,7 @@ export default function Header() {
                             size="lg"
                             className="h-12 text-base font-heading md:text-lg lg:h-14 lg:text-xl bg-green-500 hover:bg-green-600"
                         >
-                            Create Projects 
+                            Create Projects
                         </Button>
                     </Link>
                 </div>

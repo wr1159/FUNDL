@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "Fundl",
-    description: "Crowdfund a web3 project",
+    title: "FUNDL",
+    description: "Crowdfund a Web3 Project with FUNDL",
 };
 
 export default function RootLayout({

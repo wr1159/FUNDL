@@ -27,7 +27,7 @@ import {
 } from "@/lib/calls";
 
 // Define project type based on the contract struct
-type Project = [
+export type Project = [
     tokenAddress: `0x${string}`,
     owner: `0x${string}`,
     name: string,
