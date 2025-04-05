@@ -26,7 +26,7 @@ type SerializedProject = [
     currentMilestoneStartTime: string,
     timeLastCollected: string,
     amountCollectedForMilestone: string
-] & { [key: number]: any };
+];
 
 // Helper to convert serialized project to project type with proper BigInt values
 function deserializeProject(serializedProject: SerializedProject): Project {
@@ -124,14 +124,18 @@ export default function ProjectsPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [page, setPage] = useState(1);
-    const projectsPerPage = 9;
+    const projectsPerPage = 6;
     const publicClient = createPublicClient({
         chain: baseSepolia,
         transport: http(),
     });
 
     // Fetch project counter
-    const { data: projectCount, isLoading: countLoading } = useReadContract({
+    const {
+        data: projectCount,
+        isLoading: countLoading,
+        error: countError,
+    } = useReadContract({
         address: FundlAddress as `0x${string}`,
         abi: FundlABI,
         functionName: "projectIdCounter",
@@ -139,8 +143,8 @@ export default function ProjectsPage() {
 
     // Fetch all projects
     useEffect(() => {
+        console.log("countError", countError);
         async function fetchProjects() {
-            console.log("fetchingProjects");
             if (countLoading || projectCount === undefined) return;
 
             try {
