@@ -140,6 +140,7 @@ export default function ProjectsPage() {
     // Fetch all projects
     useEffect(() => {
         async function fetchProjects() {
+            console.log("fetchingProjects");
             if (countLoading || projectCount === undefined) return;
 
             try {
