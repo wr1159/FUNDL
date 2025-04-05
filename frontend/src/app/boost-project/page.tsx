@@ -72,7 +72,7 @@ const TransactionInfo = ({
 );
 
 // Project card component with Project type from [id]/page.tsx
-const ProjectCard = ({ project, id }: { project: Project; id: number }) => {
+const ProjectCard = ({ project }: { project: Project; id: number }) => {
     // Calculate funding progress percentage
     const progressPercentage =
         project[9] > BigInt(0) && project[8] > BigInt(0)

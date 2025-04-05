@@ -61,9 +61,7 @@ export default function ProjectPage() {
     const [fundAmount, setFundAmount] = useState("");
     const [availableToCollect, setAvailableToCollect] = useState<string>("0");
     const [isOwner, setIsOwner] = useState(false);
-    const [isFunder, setIsFunder] = useState(false);
     const [hasRequestedRefund, setHasRequestedRefund] = useState(false);
-    const [userFundAmount, setUserFundAmount] = useState<string>("0");
 
     // Create a public client
     const publicClient = createPublicClient({
@@ -97,42 +95,6 @@ export default function ProjectPage() {
 
         fetchProjectData();
     }, [id]);
-
-    // Check if the connected address is a funder of the project
-    useEffect(() => {
-        async function checkFunderStatus() {
-            if (!id || !address || !isConnected) return;
-
-            try {
-                // Check funding amount from the mapping
-                const fundingAmount = await publicClient.readContract({
-                    address: FundlAddress as `0x${string}`,
-                    abi: FundlABI,
-                    functionName: "fundingByUsersByProject",
-                    args: [BigInt(id as string), address],
-                });
-
-                const hasRequestedRefundBefore =
-                    await publicClient.readContract({
-                        address: FundlAddress as `0x${string}`,
-                        abi: FundlABI,
-                        functionName: "refundRequestByUsersByProject",
-                        args: [BigInt(id as string), address],
-                    });
-
-                setIsFunder(BigInt(fundingAmount as bigint) > BigInt(0));
-                setUserFundAmount(formatEther(fundingAmount as bigint));
-                setHasRequestedRefund(hasRequestedRefundBefore as boolean);
-            } catch (err) {
-                console.error("Error checking funder status:", err);
-                setIsFunder(false);
-            }
-        }
-
-        if (isConnected && address) {
-            checkFunderStatus();
-        }
-    }, [id, address, isConnected, publicClient]);
 
     // Update state based on fetched project data
     useEffect(() => {
@@ -245,7 +207,7 @@ export default function ProjectPage() {
             : [];
 
     const requestRefundCall =
-        address && isFunder && !hasRequestedRefund
+        address && !hasRequestedRefund
             ? [
                   {
                       to: FundlAddress as `0x${string}`,
@@ -472,13 +434,13 @@ export default function ProjectPage() {
                                     {hasRequestedRefund ? (
                                         <div className="p-4 bg-yellow-100 border-4 border-black">
                                             <p className="font-bold">
-                                                ⚠️ You've already requested a
-                                                refund for this project.
+                                                ⚠️ You&apos;ve already requested
+                                                a refund for this project.
                                             </p>
                                             <p className="mt-2 text-sm">
                                                 If enough funders (50%) request
-                                                refunds, you'll be able to claim
-                                                your funds back.
+                                                refunds, you&apos;ll be able to
+                                                claim your funds back.
                                             </p>
                                         </div>
                                     ) : (
@@ -510,7 +472,7 @@ export default function ProjectPage() {
                                         <ol className="list-decimal pl-4 text-sm mt-1">
                                             <li>
                                                 You can request a refund if
-                                                you've funded this project
+                                                you&apos;ve funded this project
                                             </li>
                                             <li>
                                                 If at least 50% of funders

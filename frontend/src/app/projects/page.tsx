@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useReadContract } from "wagmi";
 import Link from "next/link";
 import { createPublicClient, formatEther, http } from "viem";
 
