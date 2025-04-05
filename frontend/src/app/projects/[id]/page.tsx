@@ -61,6 +61,9 @@ export default function ProjectPage() {
     const [fundAmount, setFundAmount] = useState("");
     const [availableToCollect, setAvailableToCollect] = useState<string>("0");
     const [isOwner, setIsOwner] = useState(false);
+    const [isFunder, setIsFunder] = useState(false);
+    const [hasRequestedRefund, setHasRequestedRefund] = useState(false);
+    const [userFundAmount, setUserFundAmount] = useState<string>("0");
 
     // Create a public client
     const publicClient = createPublicClient({
@@ -94,6 +97,42 @@ export default function ProjectPage() {
 
         fetchProjectData();
     }, [id]);
+
+    // Check if the connected address is a funder of the project
+    useEffect(() => {
+        async function checkFunderStatus() {
+            if (!id || !address || !isConnected) return;
+
+            try {
+                // Check funding amount from the mapping
+                const fundingAmount = await publicClient.readContract({
+                    address: FundlAddress as `0x${string}`,
+                    abi: FundlABI,
+                    functionName: "fundingByUsersByProject",
+                    args: [BigInt(id as string), address],
+                });
+
+                const hasRequestedRefundBefore =
+                    await publicClient.readContract({
+                        address: FundlAddress as `0x${string}`,
+                        abi: FundlABI,
+                        functionName: "refundRequestByUsersByProject",
+                        args: [BigInt(id as string), address],
+                    });
+
+                setIsFunder(BigInt(fundingAmount as bigint) > BigInt(0));
+                setUserFundAmount(formatEther(fundingAmount as bigint));
+                setHasRequestedRefund(hasRequestedRefundBefore as boolean);
+            } catch (err) {
+                console.error("Error checking funder status:", err);
+                setIsFunder(false);
+            }
+        }
+
+        if (isConnected && address) {
+            checkFunderStatus();
+        }
+    }, [id, address, isConnected, publicClient]);
 
     // Update state based on fetched project data
     useEffect(() => {
@@ -183,6 +222,36 @@ export default function ProjectPage() {
                       data: encodeFunctionData({
                           abi: FundlABI,
                           functionName: "collectFunding",
+                          args: [BigInt(id as string)],
+                      }),
+                      chainId: baseSepolia.id,
+                  },
+              ]
+            : [];
+
+    const completeMilestoneCall =
+        address && isOwner
+            ? [
+                  {
+                      to: FundlAddress as `0x${string}`,
+                      data: encodeFunctionData({
+                          abi: FundlABI,
+                          functionName: "completeMilestone",
+                          args: [BigInt(id as string)],
+                      }),
+                      chainId: baseSepolia.id,
+                  },
+              ]
+            : [];
+
+    const requestRefundCall =
+        address && isFunder && !hasRequestedRefund
+            ? [
+                  {
+                      to: FundlAddress as `0x${string}`,
+                      data: encodeFunctionData({
+                          abi: FundlABI,
+                          functionName: "createRefundRequest",
                           args: [BigInt(id as string)],
                       }),
                       chainId: baseSepolia.id,
@@ -393,14 +462,113 @@ export default function ProjectPage() {
                             </div>
                         )}
 
-                        {/* Owner: Collect Funds Section */}
+                        {/* Funder: Request Refund Section */}
+                        {isConnected && !isOwner && (
+                            <div className="bg-red-50 border-4 border-black rounded-lg p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mt-6">
+                                <h2 className="text-2xl font-extrabold mb-4">
+                                    🔄 Request Refund
+                                </h2>
+                                <div className="space-y-4">
+                                    {hasRequestedRefund ? (
+                                        <div className="p-4 bg-yellow-100 border-4 border-black">
+                                            <p className="font-bold">
+                                                ⚠️ You've already requested a
+                                                refund for this project.
+                                            </p>
+                                            <p className="mt-2 text-sm">
+                                                If enough funders (50%) request
+                                                refunds, you'll be able to claim
+                                                your funds back.
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <Transaction
+                                            isSponsored={true}
+                                            chainId={baseSepolia.id}
+                                            calls={requestRefundCall}
+                                            onSuccess={() =>
+                                                setHasRequestedRefund(true)
+                                            }
+                                        >
+                                            <Button className="w-full bg-red-100 hover:bg-red-200">
+                                                <TransactionButton
+                                                    className="w-full bg-inherit hover:bg-inherit p-0"
+                                                    text="Request Refund ⚠️"
+                                                />
+                                            </Button>
+                                            <TransactionStatus>
+                                                <TransactionStatusLabel />
+                                                <TransactionStatusAction />
+                                            </TransactionStatus>
+                                        </Transaction>
+                                    )}
+
+                                    <div className="border-4 border-black p-3 bg-yellow-50 mt-4">
+                                        <p className="font-bold text-sm">
+                                            📝 How refunds work:
+                                        </p>
+                                        <ol className="list-decimal pl-4 text-sm mt-1">
+                                            <li>
+                                                You can request a refund if
+                                                you've funded this project
+                                            </li>
+                                            <li>
+                                                If at least 50% of funders
+                                                request refunds, all funders can
+                                                claim their funds back
+                                            </li>
+                                            <li>
+                                                This is a community protection
+                                                mechanism if a project is
+                                                inactive or not delivering
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Owner: Project Controls Section */}
                         {isConnected && isOwner && (
                             <div className="bg-purple-50 border-4 border-black rounded-lg p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
                                 <h2 className="text-2xl font-extrabold mb-4">
                                     🧙‍♂️ Project Owner Controls
                                 </h2>
                                 <div className="space-y-4">
-                                    <div className="p-4 bg-white border-4 border-black">
+                                    {/* Current Milestone Info */}
+                                    <div className="p-4 bg-blue-100 border-4 border-black">
+                                        <p className="font-bold mb-1">
+                                            Current milestone:
+                                        </p>
+                                        <p className="text-2xl font-extrabold">
+                                            {Number(project[7])} of{" "}
+                                            {Number(project[6])}
+                                        </p>
+                                    </div>
+
+                                    {/* Complete Milestone Button */}
+                                    {Number(project[7]) <
+                                        Number(project[6]) && (
+                                        <Transaction
+                                            isSponsored={true}
+                                            chainId={baseSepolia.id}
+                                            calls={completeMilestoneCall}
+                                        >
+                                            <Button className="w-full bg-blue-100 hover:bg-blue-200">
+                                                <TransactionButton
+                                                    className="w-full bg-inherit hover:bg-inherit p-0"
+                                                    text="Complete Current Milestone 🏆"
+                                                />
+                                            </Button>
+                                            <TransactionStatus>
+                                                <TransactionStatusLabel />
+                                                <TransactionStatusAction />
+                                            </TransactionStatus>
+                                        </Transaction>
+                                    )}
+
+                                    {/* Available to collect section */}
+                                    <div className="p-4 bg-white border-4 border-black mt-6">
                                         <p className="font-bold mb-1">
                                             Available to collect:
                                         </p>
@@ -440,15 +608,25 @@ export default function ProjectPage() {
 
                                     <div className="border-4 border-black p-3 bg-yellow-50 mt-4">
                                         <p className="font-bold text-sm">
-                                            📝 How collection works:
+                                            📝 How milestones & funding work:
                                         </p>
-                                        <p className="text-sm mt-1">
-                                            Funds become available over time
-                                            based on your milestone schedule.
-                                            The amount shown is calculated from
-                                            the time elapsed since your last
-                                            collection.
-                                        </p>
+                                        <ol className="list-decimal pl-4 text-sm mt-1">
+                                            <li>
+                                                Funds stream to you over time
+                                                based on your milestone schedule
+                                            </li>
+                                            <li>
+                                                Complete a milestone to move to
+                                                the next one and collect
+                                                remaining funds
+                                            </li>
+                                            <li>
+                                                The regular collect button lets
+                                                you collect funds that have
+                                                accrued since your last
+                                                collection
+                                            </li>
+                                        </ol>
                                     </div>
                                 </div>
                             </div>
