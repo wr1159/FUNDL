@@ -122,6 +122,8 @@ const ProjectCard = ({ project, id }: { project: Project; id: number }) => {
 export default function ProjectsPage() {
     const [projects, setProjects] = useState<Array<Project | null>>([]);
     const [loading, setLoading] = useState(true);
+    const [countLoading, setCountLoading] = useState(true);
+    const [projectCount, setProjectCount] = useState<number>(0);
     const [error, setError] = useState<string | null>(null);
     const [page, setPage] = useState(1);
     const projectsPerPage = 6;
@@ -131,19 +133,37 @@ export default function ProjectsPage() {
     });
 
     // Fetch project counter
-    const {
-        data: projectCount,
-        isLoading: countLoading,
-        error: countError,
-    } = useReadContract({
-        address: FundlAddress as `0x${string}`,
-        abi: FundlABI,
-        functionName: "projectIdCounter",
-    });
+    // const {
+    //     data: projectCount,
+    //     isLoading: countLoading,
+    //     error: countError,
+    // } = useReadContract({
+    //     address: FundlAddress as `0x${string}`,
+    //     abi: FundlABI,
+    //     functionName: "projectIdCounter",
+    // });
+    useEffect(() => {
+        async function fetchProjectCount() {
+            setCountLoading(true);
+            try {
+                const count = await publicClient.readContract({
+                    address: FundlAddress as `0x${string}`,
+                    abi: FundlABI,
+                    functionName: "projectIdCounter",
+                });
+                setProjectCount(count as number);
+                setCountLoading(false);
+            } catch (error) {
+                console.error("Error fetching project count:", error);
+                setCountLoading(false);
+            }
+        }
+        fetchProjectCount();
+    }, []);
 
     // Fetch all projects
     useEffect(() => {
-        console.log("countError", countError);
+        // console.log("countError", countError);
         async function fetchProjects() {
             if (countLoading) return;
 
