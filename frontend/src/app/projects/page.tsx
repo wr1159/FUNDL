@@ -145,11 +145,11 @@ export default function ProjectsPage() {
     useEffect(() => {
         console.log("countError", countError);
         async function fetchProjects() {
-            if (countLoading || projectCount === undefined) return;
+            if (countLoading) return;
 
             try {
                 setLoading(true);
-                const count = Number(projectCount);
+                const count = Number(projectCount) || 5;
                 const projectsArray: Array<Project | null> = [];
 
                 // Create array of projects to fetch
