@@ -115,7 +115,7 @@ const ProjectCard = ({ project }: { project: Project; id: number }) => {
                             </span>
                             <span>
                                 {formatEther(project[9])} /{" "}
-                                {formatEther(project[8])} ETH
+                                {formatEther(project[8])} Tokens
                             </span>
                         </div>
                         <div className="h-4 w-full border-2 border-black bg-white relative">

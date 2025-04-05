@@ -327,13 +327,13 @@ export default function ProjectPage() {
                                 <div>
                                     <p className="font-bold">Goal Amount:</p>
                                     <p className="font-bold">
-                                        {formatEther(project[8])} ETH
+                                        {formatEther(project[8])} FMT
                                     </p>
                                 </div>
                                 <div>
                                     <p className="font-bold">Raised So Far:</p>
                                     <p className="font-bold">
-                                        {formatEther(project[9])} ETH
+                                        {formatEther(project[9])} FMT
                                     </p>
                                 </div>
                             </div>
@@ -349,7 +349,7 @@ export default function ProjectPage() {
                                 ></div>
                                 <div className="absolute inset-0 flex items-center justify-center font-extrabold text-black">
                                     {formatEther(project[9])} /{" "}
-                                    {formatEther(project[8])} ETH
+                                    {formatEther(project[8])} FMT
                                 </div>
                             </div>
                         </div>
@@ -368,7 +368,7 @@ export default function ProjectPage() {
                                             htmlFor="fundAmount"
                                             className="block font-bold mb-2"
                                         >
-                                            Amount to Fund (ETH)
+                                            Amount to Fund (FMT)
                                         </Label>
                                         <Input
                                             id="fundAmount"
@@ -535,7 +535,7 @@ export default function ProjectPage() {
                                             Available to collect:
                                         </p>
                                         <p className="text-3xl font-extrabold">
-                                            {availableToCollect} ETH
+                                            {availableToCollect} FMT
                                         </p>
                                     </div>
 
@@ -602,7 +602,7 @@ export default function ProjectPage() {
                                 </h2>
                                 <p className="mb-4">
                                     Connect your wallet to fund this project or
-                                    collect funds if you`&#39;`re the owner.
+                                    collect funds if you&#39;re the owner.
                                 </p>
                                 <Button>
                                     <Wallet>
