@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { useAccount, useReadContract } from "wagmi";
+import { useAccount } from "wagmi";
 import {
     Transaction,
     TransactionButton,
@@ -13,7 +13,13 @@ import {
 import { Wallet, ConnectWallet } from "@coinbase/onchainkit/wallet";
 import { Avatar, Name } from "@coinbase/onchainkit/identity";
 import { baseSepolia } from "viem/chains";
-import { encodeFunctionData, formatEther, parseEther } from "viem";
+import {
+    createPublicClient,
+    encodeFunctionData,
+    formatEther,
+    http,
+    parseEther,
+} from "viem";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -47,25 +53,49 @@ export default function ProjectPage() {
     const { id } = useParams();
     const { address, isConnected } = useAccount();
     const [project, setProject] = useState<Project | null>(null);
+    const [projectData, setProjectData] = useState<Project | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isError, setIsError] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [fundAmount, setFundAmount] = useState("");
     const [availableToCollect, setAvailableToCollect] = useState<string>("0");
     const [isOwner, setIsOwner] = useState(false);
 
-    // Use the useReadContract hook to fetch project data
-    const {
-        data: projectData,
-        isError,
-        isLoading,
-    } = useReadContract({
-        address: FundlAddress as `0x${string}`,
-        abi: FundlABI,
-        functionName: "projects",
-        args: id ? [BigInt(id as string)] : undefined,
+    // Create a public client
+    const publicClient = createPublicClient({
+        chain: baseSepolia,
+        transport: http(),
     });
 
-    // Update state based on contract read results
+    // Fetch project data using publicClient
+    useEffect(() => {
+        async function fetchProjectData() {
+            if (!id) return;
+
+            setIsLoading(true);
+            try {
+                const data = await publicClient.readContract({
+                    address: FundlAddress as `0x${string}`,
+                    abi: FundlABI,
+                    functionName: "projects",
+                    args: [BigInt(id as string)],
+                });
+
+                setProjectData(data as Project);
+                setIsLoading(false);
+                setIsError(false);
+            } catch (err) {
+                console.error("Error fetching project:", err);
+                setIsError(true);
+                setIsLoading(false);
+            }
+        }
+
+        fetchProjectData();
+    }, [id]);
+
+    // Update state based on fetched project data
     useEffect(() => {
         if (isLoading) {
             setLoading(true);
@@ -78,11 +108,8 @@ export default function ProjectPage() {
             return;
         }
 
-        setProject(projectData as Project);
-        setIsOwner(
-            address?.toLowerCase() ===
-                (projectData as Project)[1]?.toLowerCase()
-        );
+        setProject(projectData);
+        setIsOwner(address?.toLowerCase() === projectData[1]?.toLowerCase());
         setLoading(false);
     }, [projectData, isLoading, isError, address]);
 

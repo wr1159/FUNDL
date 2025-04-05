@@ -222,7 +222,6 @@ export default function ProjectsPage() {
         startIndex,
         startIndex + projectsPerPage
     );
-    console.log("projects", projects);
 
     if (loading || countLoading) {
         return (
