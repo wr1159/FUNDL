@@ -29,11 +29,10 @@ Tracks:
 
 - **Create Project** - State your goal amount, ERC20 token, end date and information on project.
 - **Fundl** - Users fund the project with the specified token.
-- **Donate** - Users send project money immediately with **RequestNetwork**
+- **Boost** - Users can boost a project to the front page with **RequestNetwork**
 - **Payment Streaming** – Payment is Streamed every block to the project owner until End of Project.
 - **Milestone Based System** - Payment Streaming Rate and Threshold is dependent on milestone.
 - **Voting-based Refund** - Users can vote to stop the project for refund in case of lack of activity from the project.
-- **Interoperability / Multichain** – Supported by VIA Labs cross chain Tokens, users can crowdfund from any chain to Base.⬇️
 
 ---
 
@@ -41,9 +40,9 @@ Tracks:
 
 | Layer        | Technology |
 |-------------|------------|
-| **Frontend**  | Next.js, React, OnchainKit, TailwindCSS |
+| **Frontend**  | Next.js, React, OnchainKit, TailwindCSS, Wagmi |
 | **Backend**   | Request Network  |
-| **Blockchain** | Solidity, Foundry, Base, VIA Labs |
+| **Blockchain** | Solidity, Foundry, Base |
 
 ---
 
